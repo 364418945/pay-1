@@ -146,7 +146,7 @@ public class WeChatResource {
             String prepay_id = resData.getPrepay_id();
             return new AppPayParams(prepay_id);
         } catch (Exception e) {
-            log.error("app_pay_params error!", e);
+            log.error("app_pay_params error!", e.getMessage());
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             return null;
         }

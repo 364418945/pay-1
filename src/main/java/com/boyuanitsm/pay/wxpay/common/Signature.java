@@ -129,10 +129,11 @@ public class Signature {
      */
     public static boolean checkIsSignValidFromResponseString(String responseString) throws ParserConfigurationException, IOException, SAXException {
 
+        if (responseString == null) return false;
         Map<String, Object> map = XMLParser.getMapFromXML(responseString);
         log.debug(map.toString());
 
-        String signFromAPIResponse = map.get("sign").toString();
+        String signFromAPIResponse = map.get("sign") == null ? "" : map.get("sign").toString();
         if (signFromAPIResponse == null || signFromAPIResponse.isEmpty()) {
             log.warn("API返回的数据签名数据不存在，有可能被第三方篡改!!!");
             return false;
