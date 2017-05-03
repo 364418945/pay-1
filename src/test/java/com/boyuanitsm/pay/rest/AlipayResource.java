@@ -32,14 +32,14 @@ public class AlipayResource {
      * 支付宝即时到账交易接口快速通道
      *
      * @param WIDout_trade_no 商户订单号
-     * @param WIDsubject 商品名称
-     * @param WIDtotal_fee 付款金额
-     * @param WIDbody 商品描述
+     * @param WIDsubject      商品名称
+     * @param WIDtotal_fee    付款金额
+     * @param WIDbody         商品描述
      * @param response
      * @throws IOException
      */
     @RequestMapping(value = "pay", method = RequestMethod.POST)
-    public void pay(String WIDout_trade_no, String WIDsubject, String WIDtotal_fee, String WIDbody, HttpServletResponse response) throws IOException {
+    public void pay(String WIDout_trade_no, String WIDsubject, String WIDtotal_fee, String WIDbody, HttpServletResponse response) throws Exception {
         String sHtmlText = AlipaySubmit.buildRequest(WIDout_trade_no, WIDsubject, WIDtotal_fee, WIDbody);
         response.setHeader("Content-Type", "text/html;charset=UTF-8");
         response.getWriter().println(sHtmlText);
@@ -48,8 +48,8 @@ public class AlipayResource {
     /**
      * 支付宝即时到账批量退款有密接口快速通道
      *
-     * @param WIDbatch_no 退款批次号
-     * @param WIDbatch_num 退款笔数
+     * @param WIDbatch_no    退款批次号
+     * @param WIDbatch_num   退款笔数
      * @param WIDdetail_data 退款详细数据
      * @param response
      * @throws IOException
@@ -76,7 +76,7 @@ public class AlipayResource {
         if (AlipayNotify.verifyRequest(request.getParameterMap())) {
             //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
 
-            if(ayncNotify.getTrade_status().equals("TRADE_FINISHED")){
+            if (ayncNotify.getTrade_status().equals("TRADE_FINISHED")) {
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
@@ -84,7 +84,7 @@ public class AlipayResource {
 
                 //注意：
                 //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
-            } else if (ayncNotify.getTrade_status().equals("TRADE_SUCCESS")){
+            } else if (ayncNotify.getTrade_status().equals("TRADE_SUCCESS")) {
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
@@ -117,7 +117,7 @@ public class AlipayResource {
         if (AlipayNotify.verifyRequest(request.getParameterMap())) {
             //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
 
-            if(ayncReturn.getTrade_status().equals("TRADE_FINISHED") || ayncReturn.getTrade_status().equals("TRADE_SUCCESS")){
+            if (ayncReturn.getTrade_status().equals("TRADE_FINISHED") || ayncReturn.getTrade_status().equals("TRADE_SUCCESS")) {
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //如果有做过处理，不执行商户的业务程序
@@ -138,13 +138,13 @@ public class AlipayResource {
      * 移动支付 签名机制
      *
      * @param outTradeNO 商户网站唯一订单号
-     * @param subject 商品名称
-     * @param totalFee total_fee
+     * @param subject    商品名称
+     * @param totalFee   total_fee
      * @return orderStr 主要包含商户的订单信息，key=“value”形式，以&连接。
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "mobile_payment_sign", method = RequestMethod.GET)
-    public String mobilePaymentSign(String outTradeNO, String subject, String totalFee) throws UnsupportedEncodingException {
+    public String mobilePaymentSign(String outTradeNO, String subject, String totalFee) throws Exception {
         return AlipayMobilePaymentSign.pay(outTradeNO, subject, totalFee);
     }
 }

@@ -1,18 +1,4 @@
-/*
- * Copyright 2016-2017 Shanghai Boyuan IT Services Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package com.boyuanitsm.pay.wxpay.common;
 
@@ -23,32 +9,25 @@ import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.Configurable;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.ssl.SSLContexts;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import javax.net.ssl.SSLContext;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.security.*;
-import java.security.cert.CertificateException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 
 /**
- * User: rizenguo
+ * User:
  * Date: 2014/10/29
  * Time: 14:36
  */
@@ -84,30 +63,31 @@ public class HttpsRequest implements IServiceRequest {
 
     private void init() throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
 
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
-        FileInputStream instream = new FileInputStream(new File(Configure.getCertLocalPath()));//加载本地的证书进行https加密传输
-        try {
-            keyStore.load(instream, Configure.getCertPassword().toCharArray());//设置证书密码
-        } catch (CertificateException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } finally {
-            instream.close();
-        }
-
-        // Trust own CA and all self-signed certs
-        SSLContext sslcontext = SSLContexts.custom()
-                .loadKeyMaterial(keyStore, Configure.getCertPassword().toCharArray())
-                .build();
-        // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
-                sslcontext,
-                new String[]{"TLSv1"},
-                null,
-                new DefaultHostnameVerifier());
-
-        httpClient = HttpClients.custom()
-                .setSSLSocketFactory(socketFactory)
-                .build();
+//        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+//        FileInputStream instream = new FileInputStream(new File(Configure.getCertLocalPath()));//加载本地的证书进行https加密传输
+//        try {
+//            keyStore.load(instream, Configure.getCertPassword().toCharArray());//设置证书密码
+//        } catch (CertificateException | NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } finally {
+//            instream.close();
+//        }
+//
+//        // Trust own CA and all self-signed certs
+//        SSLContext sslcontext = SSLContexts.custom()
+//                .loadKeyMaterial(keyStore, Configure.getCertPassword().toCharArray())
+//                .build();
+//        // Allow TLSv1 protocol only
+//        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
+//                sslcontext,
+//                new String[]{"TLSv1"},
+//                null,
+//                new DefaultHostnameVerifier());
+//
+//        httpClient = HttpClients.custom()
+//                .setSSLSocketFactory(socketFactory)
+//                .build();
+        httpClient = HttpClients.createDefault();
 
         //根据默认超时限制初始化requestConfig
         requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout).setConnectTimeout(connectTimeout).build();
@@ -204,7 +184,7 @@ public class HttpsRequest implements IServiceRequest {
      * @param socketTimeout 连接时长，默认10秒
      */
     public void setSocketTimeout(int socketTimeout) {
-        socketTimeout = socketTimeout;
+        this.socketTimeout = socketTimeout;
         resetRequestConfig();
     }
 
@@ -214,11 +194,11 @@ public class HttpsRequest implements IServiceRequest {
      * @param connectTimeout 传输时长，默认30秒
      */
     public void setConnectTimeout(int connectTimeout) {
-        connectTimeout = connectTimeout;
+        this.connectTimeout = connectTimeout;
         resetRequestConfig();
     }
 
-    private void resetRequestConfig(){
+    private void resetRequestConfig() {
         requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout).setConnectTimeout(connectTimeout).build();
     }
 
@@ -228,6 +208,6 @@ public class HttpsRequest implements IServiceRequest {
      * @param requestConfig 设置HttpsRequest的请求器配置
      */
     public void setRequestConfig(RequestConfig requestConfig) {
-        requestConfig = requestConfig;
+        this.requestConfig = requestConfig;
     }
 }

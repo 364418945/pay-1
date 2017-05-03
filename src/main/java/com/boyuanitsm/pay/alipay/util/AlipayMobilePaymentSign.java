@@ -1,18 +1,4 @@
-/*
- * Copyright 2016-2017 Shanghai Boyuan IT Services Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package com.boyuanitsm.pay.alipay.util;
 
@@ -21,13 +7,12 @@ import com.boyuanitsm.pay.alipay.sign.RSA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
  * 移动支付 签名工具类
  *
- * @author hookszhang on 7/19/16.
+ * @author baiping.liu on 7/19/16.
  * @see <a href="https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.y40CRD&treeId=59&articleId=103927&docType=1">https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.y40CRD&treeId=59&articleId=103927&docType=1</a>
  */
 public class AlipayMobilePaymentSign {
@@ -42,7 +27,7 @@ public class AlipayMobilePaymentSign {
      * @param totalFee
      * @return
      */
-    public static String pay(String outTradeNO, String subject, String totalFee) throws UnsupportedEncodingException {
+    public static String pay(String outTradeNO, String subject, String totalFee) throws Exception {
         String[] parameters = new String[]{
                 String.format("service=\"%s\"", AlipayConfig.mobile_securitypay_pay),
                 String.format("partner=\"%s\"", AlipayConfig.partner),
@@ -66,11 +51,19 @@ public class AlipayMobilePaymentSign {
             }
         }
 
-        String sign = RSA.sign(waitSignStr, AlipayConfig.private_key, AlipayConfig.input_charset);
+        String sign = "";
+
+        // 移动支付，签名类型，目前仅支持RSA
+//        if (AlipayConfig.sign_type.equals("RSA")) {
+        sign = RSA.sign(waitSignStr, AlipayConfig.private_key, AlipayConfig.input_charset);
+//        } else if (AlipayConfig.sign_type.equals("MD5")) {
+//            sign = MD5.sign(waitSignStr, AlipayConfig.private_key, AlipayConfig.input_charset);
+//        }
         log.debug("SignType: RSA, 签名: {}", sign);
         sign = URLEncoder.encode(sign, AlipayConfig.input_charset);
 
         waitSignStr += String.format("&sign=\"%s\"", sign);
+//        waitSignStr += "&sign_type=\"" + AlipayConfig.sign_type + "\"";
         waitSignStr += "&sign_type=\"RSA\"";// 签名类型RSA
         return waitSignStr;
     }

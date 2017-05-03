@@ -1,18 +1,4 @@
-/*
- * Copyright 2016-2017 Shanghai Boyuan IT Services Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package com.boyuanitsm.pay;
 
@@ -26,7 +12,7 @@ import java.io.InputStreamReader;
  * Payment of the properties. Read classloader folder pay.yml file.
  * PayProperties.getInstance() to use it.
  *
- * @author hookszhang on 7/7/16.
+ * @author baiping.liu on 7/7/16.
  */
 public class PayProperties {
 
@@ -69,6 +55,7 @@ public class PayProperties {
         private String inputCharset;
         private String antiPhishingKey;
         private String exterInvokeIp;
+        private String md5key;
 
         public String getPartner() {
             return partner;
@@ -156,6 +143,14 @@ public class PayProperties {
 
         public void setExterInvokeIp(String exterInvokeIp) {
             this.exterInvokeIp = exterInvokeIp;
+        }
+
+        public String getMd5key() {
+            return md5key;
+        }
+
+        public void setMd5key(String md5key) {
+            this.md5key = md5key;
         }
     }
 
