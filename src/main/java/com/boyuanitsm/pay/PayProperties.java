@@ -31,7 +31,6 @@ public class PayProperties {
 
     static {
         try {
-            System.out.println("--------" + PayProperties.class.getClassLoader().toString());
             YamlReader reader = new YamlReader(new InputStreamReader(PayProperties.class.getClassLoader().getResourceAsStream("pay.yml")));
             PayProperties.instance = reader.read(PayProperties.class);
             reader.close();
