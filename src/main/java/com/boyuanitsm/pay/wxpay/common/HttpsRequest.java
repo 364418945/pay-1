@@ -2,6 +2,7 @@
 
 package com.boyuanitsm.pay.wxpay.common;
 
+import com.boyuanitsm.pay.unionpay.BaseHttpSSLSocketFactory;
 import com.boyuanitsm.pay.wxpay.service.IServiceRequest;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -12,6 +13,8 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -19,12 +22,11 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 
 /**
  * User:
@@ -86,13 +88,29 @@ public class HttpsRequest implements IServiceRequest {
 //
 //        httpClient = HttpClients.custom()
 //                .setSSLSocketFactory(socketFactory)
-//                .build();
-        httpClient = HttpClients.createDefault();
+//                .build();//
+//        httpClient = HttpClients.createDefault();//
 
-        //根据默认超时限制初始化requestConfig
-        requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout).setConnectTimeout(connectTimeout).build();
+        try {
+            // 创建SSLContext对象，并使用我们指定的信任管理器初始化
+            TrustManager[] tm = {new BaseHttpSSLSocketFactory.MyX509TrustManager()};
+            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+            sslContext.init(null, tm, new java.security.SecureRandom());
+            SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
+                    sslContext,
+                    new String[]{"TLSv1"},
+                    null,
+                    new DefaultHostnameVerifier());
 
-        hasInit = true;
+            httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
+
+            //根据默认超时限制初始化requestConfig
+            requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout).setConnectTimeout(connectTimeout).build();
+
+            hasInit = true;
+        } catch (NoSuchProviderException e) {
+            log.error("https请求异常：{}", e);
+        }
     }
 
     /**
