@@ -37,6 +37,12 @@ public class Configure {
 	//微信支付分配的商户号ID（开通公众号的微信支付功能之后可以获取到）
 	private static String mchID = PayProperties.getInstance().getWechat().getMchid();
 
+	//微信分配的公众号ID（开通公众号之后可以获取到）
+	private static String appID2 = PayProperties.getInstance().getWechat().getAppid2();
+
+	//微信支付分配的商户号ID（开通公众号的微信支付功能之后可以获取到）
+	private static String mchID2 = PayProperties.getInstance().getWechat().getMchid2();
+
 	//受理模式下给子商户分配的子商户号
 	private static String subMchID = PayProperties.getInstance().getWechat().getSubmchid();
 
@@ -138,6 +144,22 @@ public class Configure {
 	
 	public static String getMchid(){
 		return mchID;
+	}
+
+	public static String getAppID2() {
+		return appID2;
+	}
+
+	public static void setAppID2(String appID2) {
+		Configure.appID2 = appID2;
+	}
+
+	public static String getMchID2() {
+		return mchID2;
+	}
+
+	public static void setMchID2(String mchID2) {
+		Configure.mchID2 = mchID2;
 	}
 
 	public static String getSubMchid(){

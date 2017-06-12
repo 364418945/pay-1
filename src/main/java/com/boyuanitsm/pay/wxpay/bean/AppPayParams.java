@@ -29,8 +29,8 @@ import com.boyuanitsm.pay.wxpay.common.Signature;
 public class AppPayParams {
 
     public AppPayParams(String prepayid) throws IllegalAccessException {
-        this.appid = Configure.getAppid();
-        this.partnerid = Configure.getMchid();
+        this.appid = Configure.getAppID2();
+        this.partnerid = Configure.getMchID2();
         this.prepayid = prepayid;
         // 暂填写固定值Sign=WXPay
         this._package = "Sign=WXPay";

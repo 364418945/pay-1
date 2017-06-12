@@ -5,8 +5,11 @@ package com.boyuanitsm.pay.wxpay.common;
 import com.boyuanitsm.pay.unionpay.BaseHttpSSLSocketFactory;
 import com.boyuanitsm.pay.wxpay.service.IServiceRequest;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
+import com.thoughtworks.xstream.core.util.QuickWriter;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.naming.NoNameCoder;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.XppDriver;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -25,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.SocketTimeoutException;
 import java.security.*;
 
@@ -137,7 +141,41 @@ public class HttpsRequest implements IServiceRequest {
         HttpPost httpPost = new HttpPost(url);
 
         //解决XStream对出现双下划线的bug
-        XStream xStreamForRequestPostData = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
+//        XStream xStreamForRequestPostData = new XStream(new DomDriver("UTF-8", new XmlFriendlyNameCoder("-_", "_")));
+        XStream xStreamForRequestPostData = new XStream(new XppDriver(new NoNameCoder()) {
+
+            @Override
+            public HierarchicalStreamWriter createWriter(Writer out) {
+                return new PrettyPrintWriter(out) {
+                    // 对所有xml节点的转换都增加CDATA标记
+                    boolean cdata = true;
+
+                    @Override
+                    @SuppressWarnings("rawtypes")
+                    public void startNode(String name, Class clazz) {
+                        super.startNode(name, clazz);
+                    }
+
+                    @Override
+                    public String encodeNode(String name) {
+                        return name;
+                    }
+
+
+                    @Override
+                    protected void writeText(QuickWriter writer, String text) {
+                        if (cdata) {
+                            writer.write("<![CDATA[");
+                            writer.write(text);
+                            writer.write("]]>");
+                        } else {
+                            writer.write(text);
+                        }
+                    }
+                };
+            }
+        });
+
 
         //将要提交给API的数据对象转换成XML格式数据Post给API
         String postDataXML = xStreamForRequestPostData.toXML(xmlObj);

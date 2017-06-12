@@ -113,7 +113,16 @@ public class UnifiedOrderReqData {
      * @throws IllegalAccessException
      */
     public UnifiedOrderReqData(String body, int total_fee, String out_trade_no) throws IllegalAccessException {
-        this(body, out_trade_no, total_fee);
+        this.appid = Configure.getAppID2();
+        this.mch_id = Configure.getMchID2();
+        this.device_info = "WEB";
+        this.nonce_str = RandomStringGenerator.getRandomStringByLength(Configure.NONCE_STR_LENGTH);
+        this.body = body;
+        this.out_trade_no = out_trade_no;
+        this.total_fee = total_fee;
+        this.spbill_create_ip = Configure.getIP();
+        this.notify_url = Configure.NOTIFY_URL;
+        //
         this.trade_type = "APP";
         this.sign = Signature.getSign(this);
     }

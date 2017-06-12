@@ -162,6 +162,8 @@ public class PayProperties {
         private String key;
         private String appid;
         private String mchid;
+        private String appid2;
+        private String mchid2;
         private String submchid;
         private String certLocalPath;
         private String certPassword;
@@ -199,6 +201,22 @@ public class PayProperties {
 
         public void setMchid(String mchid) {
             this.mchid = mchid;
+        }
+
+        public String getAppid2() {
+            return appid2;
+        }
+
+        public void setAppid2(String appid2) {
+            this.appid2 = appid2;
+        }
+
+        public String getMchid2() {
+            return mchid2;
+        }
+
+        public void setMchid2(String mchid2) {
+            this.mchid2 = mchid2;
         }
 
         public String getSubmchid() {
