@@ -57,8 +57,9 @@ public class OrderQueryResData {
     private String is_subscribe = "";
     private String trade_type = "";
     private String bank_type = "";
-    private String total_fee = "";
-    private String coupon_fee = "";
+    private String total_fee = "";//总金额,订单总金额，单位为分
+    private String settlement_total_fee = "";//应结订单金额
+    private String coupon_fee = "";//代金券金额
     private String fee_type = "";
     private String transaction_id = "";
     private String out_trade_no = "";
@@ -199,6 +200,14 @@ public class OrderQueryResData {
 
     public void setTotal_fee(String total_fee) {
         this.total_fee = total_fee;
+    }
+
+    public String getSettlement_total_fee() {
+        return settlement_total_fee;
+    }
+
+    public void setSettlement_total_fee(String settlement_total_fee) {
+        this.settlement_total_fee = settlement_total_fee;
     }
 
     public String getCoupon_fee() {

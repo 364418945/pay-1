@@ -36,6 +36,8 @@ public class AyncNotify {
     private String total_fee;
     private String total_amount;//订单金额
     private String receipt_amount;//实收金额
+    private String invoice_amount;//开票金额
+    private String buyer_pay_amount;//付款金额,用户在交易中支付的金额
     private String quantity;
     private String body;
     private String discount;
@@ -226,6 +228,22 @@ public class AyncNotify {
 
     public void setReceipt_amount(String receipt_amount) {
         this.receipt_amount = receipt_amount;
+    }
+
+    public String getInvoice_amount() {
+        return invoice_amount;
+    }
+
+    public void setInvoice_amount(String invoice_amount) {
+        this.invoice_amount = invoice_amount;
+    }
+
+    public String getBuyer_pay_amount() {
+        return buyer_pay_amount;
+    }
+
+    public void setBuyer_pay_amount(String buyer_pay_amount) {
+        this.buyer_pay_amount = buyer_pay_amount;
     }
 
     public String getQuantity() {
