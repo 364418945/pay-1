@@ -34,6 +34,8 @@ public class AyncNotify {
     private String buyer_id;
     private String price;
     private String total_fee;
+    private String total_amount;//订单金额
+    private String receipt_amount;//实收金额
     private String quantity;
     private String body;
     private String discount;
@@ -208,6 +210,22 @@ public class AyncNotify {
 
     public void setTotal_fee(String total_fee) {
         this.total_fee = total_fee;
+    }
+
+    public String getTotal_amount() {
+        return total_amount;
+    }
+
+    public void setTotal_amount(String total_amount) {
+        this.total_amount = total_amount;
+    }
+
+    public String getReceipt_amount() {
+        return receipt_amount;
+    }
+
+    public void setReceipt_amount(String receipt_amount) {
+        this.receipt_amount = receipt_amount;
     }
 
     public String getQuantity() {
